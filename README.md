@@ -2,8 +2,6 @@
 
 ![Through him, and with him, and in him (This formula emphasizes the Trinitarian nature of the liturgy).](docs/jesus.jpg)
 
-This work builds upon [The Adonai Algorithm](https://dev.to/frank_vega_987689489099bf/the-adonai-algorithm-4dkc).
-
 ---
 
 # The Minimum Chromatic Number (Graph Coloring) Problem
