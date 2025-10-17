@@ -110,7 +110,7 @@ where the fields W and V specify the endpoints of the edge while the lower-case 
 
 _Example Solution:_
 
-Chromatic Number Found `(1:1, 2:1, 4:2, 3:2, 5:3)`: An optimal coloring is achieved by assigning color `1` to nodes `1` and `2`, color `2` to nodes `3` and `4`, and color `3` to node `5`.
+Chromatic Number Found `(4:1, 5:1, 2:2, 1:2, 3:3)`: An optimal coloring is achieved by assigning color `1` to nodes `4` and `5`, color `2` to nodes `1` and `2`, and color `3` to node `3`.
 
 ---
 
@@ -146,7 +146,7 @@ pip install adonai
    **Example Output:**
 
    ```
-   testMatrix1: Chromatic Number Found (1:1, 2:1, 4:2, 3:2, 5:3)
+   testMatrix1: Chromatic Number Found (4:1, 5:1, 2:2, 1:2, 3:3)
    ```
 
    This indicates a valid 3-coloring, meaning the graph's chromatic number is at most 3.
