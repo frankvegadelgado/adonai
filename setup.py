@@ -2,12 +2,12 @@ from pathlib import Path
 
 import setuptools
 
-VERSION = "0.0.2"
+VERSION = "0.0.3"
 
 NAME = "adonai"
 
 INSTALL_REQUIRES = [
-    "furones>= 0.1.2"
+    "hvala>=0.0.7"
 ]
 
 setuptools.setup(
@@ -16,7 +16,8 @@ setuptools.setup(
     description="Compute the Approximate Chromatic Number for undirected graph encoded in DIMACS format.",
     url="https://github.com/frankvegadelgado/adonai",
     project_urls={
-        "Source Code": "https://github.com/frankvegadelgado/adonai"
+        "Source Code": "https://github.com/frankvegadelgado/adonai",
+        "Documentation Research": "https://dev.to/frank_vega_987689489099bf/the-adonai-algorithm-3da4",
     },
     author="Frank Vega",
     author_email="vega.frank@gmail.com",

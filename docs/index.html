@@ -32,359 +32,196 @@
     ></script>
   </head>
   <body>
-    <h1>Adonai: Approximate Chromatic Number Solver</h1>
-    <p>
-      <img
-        src="jesus.jpg"
-        alt="Through him, and with him, and in him (This formula emphasizes the Trinitarian nature of the liturgy)."
-      />
-    </p>
-    <hr />
-    <h1>The Minimum Chromatic Number (Graph Coloring) Problem</h1>
-    <h2>1. Problem Definition</h2>
-    <p>
-      The <strong>Minimum Chromatic Number Problem</strong>, more commonly known
-      as the <strong>Graph Coloring Problem</strong>, is a classic problem in
-      computer science and graph theory.
-    </p>
-    <ul>
-      <li>
-        <strong>Input:</strong> An undirected graph <code>G = (V, E)</code>,
-        where <code>V</code> is a set of vertices and <code>E</code> is a set of
-        edges.
-      </li>
-      <li>
-        <strong>Output:</strong> A <strong>coloring</strong> function
-        <code>c: V -&gt; {1, 2, ..., k}</code> that assigns a color (represented
-        by an integer) to each vertex such that for every edge
-        <code>(u, v) ∈ E</code>, the colors of the adjacent vertices are
-        different: <code>c(u) ≠ c(v)</code>.
-      </li>
-      <li>
-        <strong>Objective:</strong> Find the smallest possible number of colors
-        <code>k</code> for which such a coloring exists. This smallest number
-        <code>k</code> is called the <strong>chromatic number</strong> of the
-        graph, denoted by <code>χ(G)</code>.
-      </li>
-    </ul>
-    <p>
-      <strong>Example:</strong> A map of countries can be modeled as a graph
-      (each country is a vertex, and an edge exists between adjacent countries).
-      The problem of coloring the map with the fewest colors so no two adjacent
-      countries share a color is precisely the graph coloring problem. The
-      famous Four Color Theorem proves that <code>χ(G) ≤ 4</code> for any planar
-      graph.
-    </p>
-    <h2>2. Computational Complexity: NP-Hardness</h2>
-    <p>
-      The decision version of the problem (&quot;Given a graph
-      <code>G</code> and an integer <code>k</code>, is
-      <code>χ(G) ≤ k</code>?&quot;) is <strong>NP-complete</strong>.
-    </p>
-    <ul>
-      <li>
-        <strong>In NP:</strong> A proposed solution (a coloring with
-        <code>k</code> colors) can be verified in polynomial time by checking
-        every edge to ensure its two vertices have different colors.
-      </li>
-      <li>
-        <strong>NP-hard:</strong> It was one of Richard Karp's original 21
-        NP-complete problems in 1972. A common reduction is from the
-        <strong>3-Satisfiability (3-SAT)</strong> problem, showing that if we
-        can solve graph coloring quickly, we can solve any problem in NP
-        quickly.
-      </li>
-    </ul>
-    <p>
-      This NP-hardness implies that there is no known algorithm that can find
-      the chromatic number of an arbitrary graph in polynomial time. Finding the
-      exact chromatic number for large graphs is computationally intractable.
-    </p>
-    <h2>3. Approximation and Heuristics</h2>
-    <p>
-      Since finding the optimal solution is infeasible for large instances, much
-      research focuses on approximation algorithms and heuristics.
-    </p>
-    <h3>Approximation Hardness</h3>
-    <p>The problem is notoriously hard to even approximate.</p>
-    <ul>
-      <li>
-        <strong>Theorem:</strong> Unless <strong>P = NP</strong>, there is no
-        polynomial-time algorithm that can approximate the chromatic number
-        within a factor of <code>n^{1−ε}</code> for any <code>ε &gt; 0</code>,
-        where <code>n</code> is the number of vertices.
-      </li>
-      <li>
-        This means that no efficient algorithm can guarantee a coloring that is
-        even remotely close to the optimal number of colors for all graphs. An
-        algorithm that used <code>n^{0.9} * χ(G)</code> colors, for example,
-        would be a breakthrough.
-      </li>
-    </ul>
-    <h3>Common Approximation Algorithms and Heuristics</h3>
-    <p>
-      Despite the negative approximation results, many algorithms work well in
-      practice for many graphs, though they offer no worst-case guarantees.
-    </p>
-    <ol>
-      <li>
-        <p><strong>Greedy Coloring (and variants):</strong></p>
-        <ul>
-          <li>
-            <strong>Algorithm:</strong> Traverse the vertices according to a
-            specific ordering (e.g., random, largest degree first, smallest
-            degree last). For each vertex, assign the smallest color number not
-            used by its already-colored neighbors.
-          </li>
-          <li>
-            <strong>Performance:</strong> The number of colors used is at most
-            <code>Δ(G) + 1</code>, where <code>Δ(G)</code> is the maximum degree
-            of any vertex. This can be very poor compared to the optimal value
-            (e.g., for a star graph, <code>Δ(G)+1</code> is low, but for a
-            complete graph, it's optimal).
-          </li>
-          <li>
-            <strong>Welsh-Powell Algorithm:</strong> A popular greedy heuristic
-            that orders vertices in descending order of their degree.
-          </li>
-        </ul>
-      </li>
-      <li>
-        <p><strong>DSatur (Degree of Saturation):</strong></p>
-        <ul>
-          <li>
-            A more sophisticated greedy algorithm. The &quot;saturation&quot;
-            degree of a vertex is the number of different colors already
-            assigned to its neighbors.
-          </li>
-          <li>
-            The algorithm dynamically selects the uncolored vertex with the
-            highest saturation degree to color next. This often yields better
-            results than simple greedy approaches.
-          </li>
-        </ul>
-      </li>
-      <li>
-        <p><strong>Using a Maximum Independent Set:</strong></p>
-        <ul>
-          <li>
-            Repeatedly find a large independent set (a set of vertices with no
-            edges between them), assign all vertices in that set the same color,
-            remove them from the graph, and repeat. The number of independent
-            sets found is the number of colors used.
-          </li>
-          <li>
-            Finding a maximum independent set is itself NP-hard, so heuristics
-            are used for this sub-problem.
-          </li>
-        </ul>
-      </li>
-      <li>
-        <p><strong>Advanced Methods:</strong></p>
-        <ul>
-          <li>
-            <strong>Integer Linear Programming (ILP):</strong> Solvers like
-            Gurobi or CPLEX can find optimal or near-optimal solutions for
-            medium-sized graphs by modeling the problem with ILP constraints.
-          </li>
-          <li>
-            <strong>Metaheuristics:</strong> Genetic algorithms, simulated
-            annealing, and tabu search are often applied to find high-quality
-            solutions for very large graphs.
-          </li>
-        </ul>
-      </li>
-    </ol>
-    <h2>4. Impact and Applications</h2>
-    <p>
-      The graph coloring problem is not just a theoretical puzzle; it has
-      profound practical implications across numerous fields.
-    </p>
-    <ul>
-      <li>
-        <strong>Compiler Design - Register Allocation:</strong> A core
-        application. Variables in a program are vertices. An edge exists between
-        two variables if they are &quot;live&quot; at the same time (they cannot
-        share a CPU register). Colors represent registers. The goal is to
-        minimize register spills (writing to main memory).
-      </li>
-      <li>
-        <strong>Scheduling and Timetabling:</strong>
-        <ul>
-          <li>
-            <strong>University Exam Scheduling:</strong> Courses are vertices.
-            An edge connects two courses if they share a student. Colors
-            represent exam time slots. The goal is to minimize the total
-            schedule length so no student has two exams at the same time.
-          </li>
-          <li>
-            <strong>Task Scheduling:</strong> Tasks are vertices, edges connect
-            tasks that cannot use the same resource (machine, person), colors
-            represent resources or time slots.
-          </li>
-        </ul>
-      </li>
-      <li>
-        <strong>Radio Frequency Assignment (Cellular Networks):</strong> Cell
-        towers are vertices. An edge exists between towers whose signals might
-        interfere if on the same frequency. Colors represent frequencies. The
-        goal is to minimize the spectrum used.
-      </li>
-      <li>
-        <strong>Sudoku and Puzzles:</strong> Solving a Sudoku puzzle is
-        equivalent to coloring a 81-vertex graph with 9 colors, where the
-        graph's structure encodes the row, column, and box constraints.
-      </li>
-      <li>
-        <strong>Chemical and Biological Sciences:</strong> Used to detect
-        clusters and patterns in complex networks, such as protein-protein
-        interaction networks.
-      </li>
-    </ul>
-    <hr />
-    <h2>Problem Statement</h2>
-    <p>Input: A Boolean Adjacency Matrix $M$.</p>
-    <p>Answer: Find a Minimum Chromatic Number.</p>
-    <h3>Example Instance: 5 x 5 matrix</h3>
-    <table>
-      <thead>
-        <tr>
-          <th></th>
-          <th>c1</th>
-          <th>c2</th>
-          <th>c3</th>
-          <th>c4</th>
-          <th>c5</th>
-        </tr>
-      </thead>
-      <tbody>
-        <tr>
-          <td><strong>r1</strong></td>
-          <td>0</td>
-          <td>0</td>
-          <td>1</td>
-          <td>0</td>
-          <td>1</td>
-        </tr>
-        <tr>
-          <td><strong>r2</strong></td>
-          <td>0</td>
-          <td>0</td>
-          <td>0</td>
-          <td>1</td>
-          <td>0</td>
-        </tr>
-        <tr>
-          <td><strong>r3</strong></td>
-          <td>1</td>
-          <td>0</td>
-          <td>0</td>
-          <td>0</td>
-          <td>1</td>
-        </tr>
-        <tr>
-          <td><strong>r4</strong></td>
-          <td>0</td>
-          <td>1</td>
-          <td>0</td>
-          <td>0</td>
-          <td>0</td>
-        </tr>
-        <tr>
-          <td><strong>r5</strong></td>
-          <td>1</td>
-          <td>0</td>
-          <td>1</td>
-          <td>0</td>
-          <td>0</td>
-        </tr>
-      </tbody>
-    </table>
-    <p>
-      The input for undirected graph is typically provided in
-      <a href="http://dimacs.rutgers.edu/Challenges">DIMACS</a> format. In this
-      way, the previous adjacency matrix is represented in a text file using the
-      following string representation:
-    </p>
-    <pre><code>p edge 5 4
+<h1>Adonai: Approximate Chromatic Number Solver</h1>
+<p><img src="jesus.jpg" alt="Through him, and with him, and in him (This formula emphasizes the Trinitarian nature of the liturgy)."></p>
+<p>This work builds upon <a href="https://dev.to/frank_vega_987689489099bf/the-adonai-algorithm-3da4">The Adonai Algorithm</a>.</p>
+<hr>
+<h1>The Minimum Chromatic Number (Graph Coloring) Problem</h1>
+<h2>1. Problem Definition</h2>
+<p>The <strong>Minimum Chromatic Number Problem</strong>, more commonly known as the <strong>Graph Coloring Problem</strong>, is a classic problem in computer science and graph theory.</p>
+<ul>
+<li><strong>Input:</strong> An undirected graph <code>G = (V, E)</code>, where <code>V</code> is a set of vertices and <code>E</code> is a set of edges.</li>
+<li><strong>Output:</strong> A <strong>coloring</strong> function <code>c: V -&gt; {1, 2, ..., k}</code> that assigns a color (represented by an integer) to each vertex such that for every edge <code>(u, v) ∈ E</code>, the colors of the adjacent vertices are different: <code>c(u) ≠ c(v)</code>.</li>
+<li><strong>Objective:</strong> Find the smallest possible number of colors <code>k</code> for which such a coloring exists. This smallest number <code>k</code> is called the <strong>chromatic number</strong> of the graph, denoted by <code>χ(G)</code>.</li>
+</ul>
+<p><strong>Example:</strong> A map of countries can be modeled as a graph (each country is a vertex, and an edge exists between adjacent countries). The problem of coloring the map with the fewest colors so no two adjacent countries share a color is precisely the graph coloring problem. The famous Four Color Theorem proves that <code>χ(G) ≤ 4</code> for any planar graph.</p>
+<h2>2. Computational Complexity: NP-Hardness</h2>
+<p>The decision version of the problem (&quot;Given a graph <code>G</code> and an integer <code>k</code>, is <code>χ(G) ≤ k</code>?&quot;) is <strong>NP-complete</strong>.</p>
+<ul>
+<li><strong>In NP:</strong> A proposed solution (a coloring with <code>k</code> colors) can be verified in polynomial time by checking every edge to ensure its two vertices have different colors.</li>
+<li><strong>NP-hard:</strong> It was one of Richard Karp's original 21 NP-complete problems in 1972. A common reduction is from the <strong>3-Satisfiability (3-SAT)</strong> problem, showing that if we can solve graph coloring quickly, we can solve any problem in NP quickly.</li>
+</ul>
+<p>This NP-hardness implies that there is no known algorithm that can find the chromatic number of an arbitrary graph in polynomial time. Finding the exact chromatic number for large graphs is computationally intractable.</p>
+<h2>3. Approximation and Heuristics</h2>
+<p>Since finding the optimal solution is infeasible for large instances, much research focuses on approximation algorithms and heuristics.</p>
+<h3>Approximation Hardness</h3>
+<p>The problem is notoriously hard to even approximate.</p>
+<ul>
+<li><strong>Theorem:</strong> Unless <strong>P = NP</strong>, there is no polynomial-time algorithm that can approximate the chromatic number within a factor of <code>n^{1−ε}</code> for any <code>ε &gt; 0</code>, where <code>n</code> is the number of vertices.</li>
+<li>This means that no efficient algorithm can guarantee a coloring that is even remotely close to the optimal number of colors for all graphs. An algorithm that used <code>n^{0.9} * χ(G)</code> colors, for example, would be a breakthrough.</li>
+</ul>
+<h3>Common Approximation Algorithms and Heuristics</h3>
+<p>Despite the negative approximation results, many algorithms work well in practice for many graphs, though they offer no worst-case guarantees.</p>
+<ol>
+<li>
+<p><strong>Greedy Coloring (and variants):</strong></p>
+<ul>
+<li><strong>Algorithm:</strong> Traverse the vertices according to a specific ordering (e.g., random, largest degree first, smallest degree last). For each vertex, assign the smallest color number not used by its already-colored neighbors.</li>
+<li><strong>Performance:</strong> The number of colors used is at most <code>Δ(G) + 1</code>, where <code>Δ(G)</code> is the maximum degree of any vertex. This can be very poor compared to the optimal value (e.g., for a star graph, <code>Δ(G)+1</code> is low, but for a complete graph, it's optimal).</li>
+<li><strong>Welsh-Powell Algorithm:</strong> A popular greedy heuristic that orders vertices in descending order of their degree.</li>
+</ul>
+</li>
+<li>
+<p><strong>DSatur (Degree of Saturation):</strong></p>
+<ul>
+<li>A more sophisticated greedy algorithm. The &quot;saturation&quot; degree of a vertex is the number of different colors already assigned to its neighbors.</li>
+<li>The algorithm dynamically selects the uncolored vertex with the highest saturation degree to color next. This often yields better results than simple greedy approaches.</li>
+</ul>
+</li>
+<li>
+<p><strong>Using a Maximum Independent Set:</strong></p>
+<ul>
+<li>Repeatedly find a large independent set (a set of vertices with no edges between them), assign all vertices in that set the same color, remove them from the graph, and repeat. The number of independent sets found is the number of colors used.</li>
+<li>Finding a maximum independent set is itself NP-hard, so heuristics are used for this sub-problem.</li>
+</ul>
+</li>
+<li>
+<p><strong>Advanced Methods:</strong></p>
+<ul>
+<li><strong>Integer Linear Programming (ILP):</strong> Solvers like Gurobi or CPLEX can find optimal or near-optimal solutions for medium-sized graphs by modeling the problem with ILP constraints.</li>
+<li><strong>Metaheuristics:</strong> Genetic algorithms, simulated annealing, and tabu search are often applied to find high-quality solutions for very large graphs.</li>
+</ul>
+</li>
+</ol>
+<h2>4. Impact and Applications</h2>
+<p>The graph coloring problem is not just a theoretical puzzle; it has profound practical implications across numerous fields.</p>
+<ul>
+<li><strong>Compiler Design - Register Allocation:</strong> A core application. Variables in a program are vertices. An edge exists between two variables if they are &quot;live&quot; at the same time (they cannot share a CPU register). Colors represent registers. The goal is to minimize register spills (writing to main memory).</li>
+<li><strong>Scheduling and Timetabling:</strong>
+<ul>
+<li><strong>University Exam Scheduling:</strong> Courses are vertices. An edge connects two courses if they share a student. Colors represent exam time slots. The goal is to minimize the total schedule length so no student has two exams at the same time.</li>
+<li><strong>Task Scheduling:</strong> Tasks are vertices, edges connect tasks that cannot use the same resource (machine, person), colors represent resources or time slots.</li>
+</ul>
+</li>
+<li><strong>Radio Frequency Assignment (Cellular Networks):</strong> Cell towers are vertices. An edge exists between towers whose signals might interfere if on the same frequency. Colors represent frequencies. The goal is to minimize the spectrum used.</li>
+<li><strong>Sudoku and Puzzles:</strong> Solving a Sudoku puzzle is equivalent to coloring a 81-vertex graph with 9 colors, where the graph's structure encodes the row, column, and box constraints.</li>
+<li><strong>Chemical and Biological Sciences:</strong> Used to detect clusters and patterns in complex networks, such as protein-protein interaction networks.</li>
+</ul>
+<hr>
+<h2>Problem Statement</h2>
+<p>Input: A Boolean Adjacency Matrix $M$.</p>
+<p>Answer: Find a Minimum Chromatic Number.</p>
+<h3>Example Instance: 5 x 5 matrix</h3>
+<table>
+<thead>
+<tr>
+<th></th>
+<th>c1</th>
+<th>c2</th>
+<th>c3</th>
+<th>c4</th>
+<th>c5</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>r1</strong></td>
+<td>0</td>
+<td>0</td>
+<td>1</td>
+<td>0</td>
+<td>1</td>
+</tr>
+<tr>
+<td><strong>r2</strong></td>
+<td>0</td>
+<td>0</td>
+<td>0</td>
+<td>1</td>
+<td>0</td>
+</tr>
+<tr>
+<td><strong>r3</strong></td>
+<td>1</td>
+<td>0</td>
+<td>0</td>
+<td>0</td>
+<td>1</td>
+</tr>
+<tr>
+<td><strong>r4</strong></td>
+<td>0</td>
+<td>1</td>
+<td>0</td>
+<td>0</td>
+<td>0</td>
+</tr>
+<tr>
+<td><strong>r5</strong></td>
+<td>1</td>
+<td>0</td>
+<td>1</td>
+<td>0</td>
+<td>0</td>
+</tr>
+</tbody>
+</table>
+<p>The input for undirected graph is typically provided in <a href="http://dimacs.rutgers.edu/Challenges">DIMACS</a> format. In this way, the previous adjacency matrix is represented in a text file using the following string representation:</p>
+<pre><code>p edge 5 4
 e 1 3
 e 1 5
 e 2 4
 e 3 5
 </code></pre>
-    <p>
-      This represents a 5x5 matrix in DIMACS format such that each edge $(v,w)$
-      appears exactly once in the input file and is not repeated as $(w,v)$. In
-      this format, every edge appears in the form of
-    </p>
-    <pre><code>e W V
+<p>This represents a 5x5 matrix in DIMACS format such that each edge $(v,w)$ appears exactly once in the input file and is not repeated as $(w,v)$. In this format, every edge appears in the form of</p>
+<pre><code>e W V
 </code></pre>
-    <p>
-      where the fields W and V specify the endpoints of the edge while the
-      lower-case character <code>e</code> signifies that this is an edge
-      descriptor line.
-    </p>
-    <p><em>Example Solution:</em></p>
-    <p>
-      Chromatic Number Found <code>(4:1, 5:1, 2:2, 1:2, 3:3)</code>: An optimal
-      coloring is achieved by assigning color <code>1</code> to nodes
-      <code>4</code> and <code>5</code>, color <code>2</code> to nodes
-      <code>1</code> and <code>2</code>, and color <code>3</code> to node
-      <code>3</code>.
-    </p>
-    <hr />
-    <h1>Compile and Environment</h1>
-    <h2>Prerequisites</h2>
-    <ul>
-      <li>Python ≥ 3.12</li>
-    </ul>
-    <h2>Installation</h2>
-    <pre><code class="language-bash">pip install adonai
+<p>where the fields W and V specify the endpoints of the edge while the lower-case character <code>e</code> signifies that this is an edge descriptor line.</p>
+<p><em>Example Solution:</em></p>
+<p>Chromatic Number Found <code>(4:0, 5:0, 2:1, 3:1, 1:2)</code>: An optimal coloring is achieved by assigning color <code>0</code> to nodes <code>4</code> and <code>5</code>, color <code>1</code> to nodes <code>2</code> and <code>3</code>, and color <code>2</code> to node <code>1</code>.</p>
+<hr>
+<h1>Compile and Environment</h1>
+<h2>Prerequisites</h2>
+<ul>
+<li>Python ≥ 3.12</li>
+</ul>
+<h2>Installation</h2>
+<pre><code class="language-bash">pip install adonai
 </code></pre>
-    <h2>Execution</h2>
-    <ol>
-      <li>
-        <p>Clone the repository:</p>
-        <pre><code class="language-bash">git clone https://github.com/frankvegadelgado/adonai.git
+<h2>Execution</h2>
+<ol>
+<li>
+<p>Clone the repository:</p>
+<pre><code class="language-bash">git clone https://github.com/frankvegadelgado/adonai.git
 cd adonai
 </code></pre>
-      </li>
-      <li>
-        <p>Run the script:</p>
-        <pre><code class="language-bash">salve -i ./benchmarks/testMatrix1
+</li>
+<li>
+<p>Run the script:</p>
+<pre><code class="language-bash">salve -i ./benchmarks/testMatrix1
 </code></pre>
-        <p>
-          utilizing the <code>salve</code> command provided by Adonai's Library
-          to execute the Boolean adjacency matrix
-          <code>adonai\benchmarks\testMatrix1</code>. The file
-          <code>testMatrix1</code> represents the example described herein. We
-          also support <code>.xz</code>, <code>.lzma</code>, <code>.bz2</code>,
-          and <code>.bzip2</code> compressed text files.
-        </p>
-        <p><strong>Example Output:</strong></p>
-        <pre><code>testMatrix1: Chromatic Number Found (4:1, 5:1, 2:2, 1:2, 3:3)
+<p>utilizing the <code>salve</code> command provided by Adonai's Library to execute the Boolean adjacency matrix <code>adonai\benchmarks\testMatrix1</code>. The file <code>testMatrix1</code> represents the example described herein. We also support <code>.xz</code>, <code>.lzma</code>, <code>.bz2</code>, and <code>.bzip2</code> compressed text files.</p>
+<p><strong>Example Output:</strong></p>
+<pre><code>testMatrix1: Chromatic Number Found (4:0, 5:0, 2:1, 3:1, 1:2)
 </code></pre>
-        <p>
-          This indicates a valid 3-coloring, meaning the graph's chromatic
-          number is at most 3.
-        </p>
-      </li>
-    </ol>
-    <hr />
-    <h2>Chromatic Number Size</h2>
-    <p>Use the <code>-c</code> flag to count the chromatic number:</p>
-    <pre><code class="language-bash">salve -i ./benchmarks/testMatrix2 -c
+<p>This indicates a valid 3-coloring, meaning the graph's chromatic number is at most 3.</p>
+</li>
+</ol>
+<hr>
+<h2>Chromatic Number Size</h2>
+<p>Use the <code>-c</code> flag to count the chromatic number:</p>
+<pre><code class="language-bash">salve -i ./benchmarks/testMatrix2 -c
 </code></pre>
-    <p><strong>Output:</strong></p>
-    <pre><code>testMatrix2: Chromatic Number Size 4
+<p><strong>Output:</strong></p>
+<pre><code>testMatrix2: Chromatic Number Size 4
 </code></pre>
-    <hr />
-    <h1>Command Options</h1>
-    <p>Display help and options:</p>
-    <pre><code class="language-bash">salve -h
+<hr>
+<h1>Command Options</h1>
+<p>Display help and options:</p>
+<pre><code class="language-bash">salve -h
 </code></pre>
-    <p><strong>Output:</strong></p>
-    <pre><code class="language-bash">usage: salve [-h] -i INPUTFILE [-a] [-b] [-c] [-v] [-l] [--version]
+<p><strong>Output:</strong></p>
+<pre><code class="language-bash">usage: salve [-h] -i INPUTFILE [-a] [-b] [-c] [-v] [-l] [--version]
 
 Compute the Approximate Chromatic Number for undirected graph encoded in DIMACS format.
 
@@ -399,21 +236,14 @@ options:
   -l, --log             enable file logging
   --version             show program's version number and exit
 </code></pre>
-    <hr />
-    <h1>Batch Execution</h1>
-    <p>
-      Batch execution allows you to solve multiple graphs within a directory
-      consecutively.
-    </p>
-    <p>
-      To view available command-line options for the
-      <code>batch_salve</code> command, use the following in your terminal or
-      command prompt:
-    </p>
-    <pre><code class="language-bash">batch_salve -h
+<hr>
+<h1>Batch Execution</h1>
+<p>Batch execution allows you to solve multiple graphs within a directory consecutively.</p>
+<p>To view available command-line options for the <code>batch_salve</code> command, use the following in your terminal or command prompt:</p>
+<pre><code class="language-bash">batch_salve -h
 </code></pre>
-    <p>This will display the following help information:</p>
-    <pre><code class="language-bash">usage: batch_salve [-h] -i INPUTDIRECTORY [-a] [-b] [-c] [-v] [-l] [--version]
+<p>This will display the following help information:</p>
+<pre><code class="language-bash">usage: batch_salve [-h] -i INPUTDIRECTORY [-a] [-b] [-c] [-v] [-l] [--version]
 
 Compute the Approximate Chromatic Number for all undirected graphs encoded in DIMACS format and stored in a directory.
 
@@ -428,14 +258,10 @@ options:
   -l, --log             enable file logging
   --version             show program's version number and exit
 </code></pre>
-    <hr />
-    <h1>Testing Application</h1>
-    <p>
-      A command-line utility named <code>test_salve</code> is provided for
-      evaluating the Algorithm using randomly generated, large sparse matrices.
-      It supports the following options:
-    </p>
-    <pre><code class="language-bash">usage: test_salve [-h] -d DIMENSION [-n NUM_TESTS] [-s SPARSITY] [-a] [-b] [-c] [-w] [-v] [-l] [--version]
+<hr>
+<h1>Testing Application</h1>
+<p>A command-line utility named <code>test_salve</code> is provided for evaluating the Algorithm using randomly generated, large sparse matrices. It supports the following options:</p>
+<pre><code class="language-bash">usage: test_salve [-h] -d DIMENSION [-n NUM_TESTS] [-s SPARSITY] [-a] [-b] [-c] [-w] [-v] [-l] [--version]
 
 The Adonai Testing Application using randomly generated, large sparse matrices.
 
@@ -455,19 +281,19 @@ options:
   -l, --log             enable file logging
   --version             show program's version number and exit
 </code></pre>
-    <hr />
-    <h1>Code</h1>
-    <ul>
-      <li>Python implementation by <strong>Frank Vega</strong>.</li>
-    </ul>
-    <hr />
-    <h1>Complexity</h1>
-    <pre><code class="language-diff">+ We present a polynomial-time algorithm that achieves an (sqrt(n) * ln(n))-approximation for the Minimum Chromatic Number problem. This provides strong evidence that P = NP by efficiently solving a computationally hard problem with near-optimal solutions.
+<hr>
+<h1>Code</h1>
+<ul>
+<li>Python implementation by <strong>Frank Vega</strong>.</li>
+</ul>
+<hr>
+<h1>Complexity</h1>
+<pre><code class="language-diff">+ We present a polynomial-time algorithm that achieves an O(ln(n))-approximation for the Minimum Chromatic Number problem. This provides strong evidence that P = NP by efficiently solving a computationally hard problem with near-optimal solutions.
 </code></pre>
-    <hr />
-    <h1>License</h1>
-    <ul>
-      <li>MIT License.</li>
-    </ul>
-  </body>
+<hr>
+<h1>License</h1>
+<ul>
+<li>MIT License.</li>
+</ul>
+</body>
 </html>

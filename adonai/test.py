@@ -34,7 +34,7 @@ def main():
     helper.add_argument('-w', '--write', action='store_true', help='write the generated random matrix to a file in the current directory')
     helper.add_argument('-v', '--verbose', action='store_true', help='anable verbose output')
     helper.add_argument('-l', '--log', action='store_true', help='enable file logging')
-    helper.add_argument('--version', action='version', version='%(prog)s 0.0.2')
+    helper.add_argument('--version', action='version', version='%(prog)s 0.0.3')
     
     # Initialize the parameters
     args = helper.parse_args()
@@ -99,9 +99,9 @@ def main():
 
         if novel_result and (bruteForce or approximation):
             if bruteForce:    
-                output = f"Exact Ratio (Adonai/Optimal): {len(set(novel_result.values()))/len(set(brute_force_result.values()))}"
+                output = f"Exact Ratio (Adonai/Optimal): {round(len(set(novel_result.values()))/len(set(brute_force_result.values())), 2)}"
             elif approximation:
-                output = f"Upper Bound for Ratio (Adonai/Optimal): {len(set(approximate_result.values()))/len(set(novel_result.values()))}"
+                output = f"Upper Bound for Ratio (Adonai/Optimal): {round(len(set(approximate_result.values()))/len(set(novel_result.values())), 2)}"
             utils.println(output, logger, args.log)
         
 

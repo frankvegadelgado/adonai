@@ -164,7 +164,7 @@ def string_result_format(result, count_result=False):
     if count_result:
         return f"Chromatic Number Size {len(set(result.values()))}"
     else:
-        formatted_string = f'{", ".join(f"{x + 1}:{y + 1}" for x, y in result.items())}'
+        formatted_string = f'{", ".join(f"{x + 1}:{y}" for x, y in result.items())}'
         return f"Chromatic Number Found ({formatted_string})"
   else:
      return "Empty Graph"

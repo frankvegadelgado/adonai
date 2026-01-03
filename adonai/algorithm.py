@@ -4,7 +4,7 @@
 import itertools
 
 import networkx as nx
-import furones.algorithm as algo
+from hvala.algorithm import find_vertex_cover
 
 def graph_coloring(graph):
     """
@@ -86,10 +86,20 @@ def graph_coloring(graph):
             # Assign consecutive colors to all remaining nodes
             approximate_coloring.update({u:(k + current_color) for k, u in enumerate(working_graph.nodes())})
             break  # All nodes colored, exit loop
+        elif nx.bipartite.is_bipartite(working_graph):
+            # If remaining graph is bipartite, color it with 2 colors
+            bipartite_coloring = nx.bipartite.color(working_graph)
+            # Adjust colors to fit into current coloring scheme
+            adjusted_coloring = {u:(color + current_color) for u, color in bipartite_coloring.items()}
+            # Assign current color to independent set
+            approximate_coloring.update({u:current_color for u in independent_set})
+            # Update coloring with adjusted bipartite coloring
+            approximate_coloring.update(adjusted_coloring)
+            break  # All nodes colored, exit loop
         else:
             # Find an independent set (set of non-adjacent nodes)
             # This set can all be colored with the current color
-            independent_set.update(algo.find_independent_set(working_graph))
+            independent_set.update(set(working_graph) - find_vertex_cover(working_graph))
             
             # Assign current color to all nodes in the independent set
             approximate_coloring.update({u:current_color for u in independent_set})

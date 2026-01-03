@@ -2,6 +2,8 @@
 
 ![Through him, and with him, and in him (This formula emphasizes the Trinitarian nature of the liturgy).](docs/jesus.jpg)
 
+This work builds upon [The Adonai Algorithm](https://dev.to/frank_vega_987689489099bf/the-adonai-algorithm-3da4).
+
 ---
 
 # The Minimum Chromatic Number (Graph Coloring) Problem
@@ -110,7 +112,7 @@ where the fields W and V specify the endpoints of the edge while the lower-case 
 
 _Example Solution:_
 
-Chromatic Number Found `(4:1, 5:1, 2:2, 1:2, 3:3)`: An optimal coloring is achieved by assigning color `1` to nodes `4` and `5`, color `2` to nodes `1` and `2`, and color `3` to node `3`.
+Chromatic Number Found `(4:0, 5:0, 2:1, 3:1, 1:2)`: An optimal coloring is achieved by assigning color `0` to nodes `4` and `5`, color `1` to nodes `2` and `3`, and color `2` to node `1`.
 
 ---
 
@@ -146,7 +148,7 @@ pip install adonai
    **Example Output:**
 
    ```
-   testMatrix1: Chromatic Number Found (4:1, 5:1, 2:2, 1:2, 3:3)
+   testMatrix1: Chromatic Number Found (4:0, 5:0, 2:1, 3:1, 1:2)
    ```
 
    This indicates a valid 3-coloring, meaning the graph's chromatic number is at most 3.
@@ -266,7 +268,7 @@ options:
 # Complexity
 
 ```diff
-+ We present a polynomial-time algorithm that achieves an (sqrt(n) * ln(n))-approximation for the Minimum Chromatic Number problem. This provides strong evidence that P = NP by efficiently solving a computationally hard problem with near-optimal solutions.
++ We present a polynomial-time algorithm that achieves an O(ln(n))-approximation for the Minimum Chromatic Number problem. This provides strong evidence that P = NP by efficiently solving a computationally hard problem with near-optimal solutions.
 ```
 
 ---

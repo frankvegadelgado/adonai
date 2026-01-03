@@ -67,9 +67,9 @@ def approximate_solution(inputFile, verbose=False, log=False, count=False, brute
     utils.println(output, logger, log)
     if novel_result and (bruteForce or approximation):
         if bruteForce:    
-            output = f"Exact Ratio (Adonai/Optimal): {len(set(novel_result.values()))/len(set(brute_force_result.values()))}"
+            output = f"Exact Ratio (Adonai/Optimal): {round(len(set(novel_result.values()))/len(set(brute_force_result.values())), 2)}"
         elif approximation:
-            output = f"Upper Bound for Ratio (Adonai/Optimal): {len(set(approximate_result.values()))/len(set(novel_result.values()))}"
+            output = f"Upper Bound for Ratio (Adonai/Optimal): {round(len(set(approximate_result.values()))/len(set(novel_result.values())), 2)}"
         utils.println(output, logger, log)
           
 def main():
@@ -82,7 +82,7 @@ def main():
     helper.add_argument('-c', '--count', action='store_true', help='calculate the size of the chromatic number')
     helper.add_argument('-v', '--verbose', action='store_true', help='anable verbose output')
     helper.add_argument('-l', '--log', action='store_true', help='enable file logging')
-    helper.add_argument('--version', action='version', version='%(prog)s 0.0.2')
+    helper.add_argument('--version', action='version', version='%(prog)s 0.0.3')
     
     # Initialize the parameters
     args = helper.parse_args()
